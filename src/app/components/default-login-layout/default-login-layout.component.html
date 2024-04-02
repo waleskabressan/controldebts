@@ -1,15 +1,27 @@
+
 <main>
-    <section> <!--formulario: logo, titulo, o formulario em si e os botoes -->
-        <img src= "/assets/images/logo.png">
-        <h2>fun</h2>
-        <button></button>
-        <div>
-            <span> or</span>
-        </div>
-        <button></button>
+    <section class="form-section">
+        <img src="/assets/images/logo.png/">
+       <h2>{{ title }}</h2>
+       <ng-content></ng-content>
+       <div class="btn-wrapper">
+            <button 
+                class="btn-primary" 
+                (click)="submit()"
+                [disabled]="disablePrimaryBtn"
+            >
+                {{ primaryBtnText }}
+            </button>
+            <div class="divider">
+                <div></div>
+                <span>or</span>
+                <div></div>
+            </div>
+            <button class="btn-secondary" (click)="navigate()">{{ secondaryBtnText }}</button>
+       </div>
     </section>
-    <section>
-        <h1> Controle suas finanças, domine seu futuro, com MoneyMinder</h1> <!-- titulo da imagem-->
+    <section class="main-section">
+        <h1> Controle suas finanças, domine seu futuro, com MoneyMinder</h1>
         <img src="/assets/images/main.png">
     </section>
 </main>
