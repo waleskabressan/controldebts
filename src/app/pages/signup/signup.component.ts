@@ -37,7 +37,7 @@ export class SignupComponent {
         '',
         [Validators.required, Validators.minLength(8)]
       ),
-      passwordconfirm: new FormControl(
+      passwordConfirm: new FormControl(
         '',
         [Validators.required, Validators.minLength(8)]
       )
@@ -45,7 +45,7 @@ export class SignupComponent {
   }
 
   submit() {
-    this.loginService.login(this.signupForm.value.email, this.signupForm.value.password).subscribe({
+    this.loginService.signup( this.signupForm.value.name, this.signupForm.value.email, this.signupForm.value.password).subscribe({
       next: () => this.toastrService.success("Login feito com sucesso"),
       error: () => this.toastrService.error ("Erro inesperado! Tente novamente"),
     })

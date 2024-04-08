@@ -41,9 +41,12 @@ export class LoginComponent {
       next: () => this.toastrService.success("Login feito com sucesso"),
       error: () => this.toastrService.error ("Erro inesperado! Tente novamente"),
     })
+    this.router.navigate(["painel-financas"])
   }
 
   navigate() {
     this.router.navigate(["signup"])
   }
+
+
 }
