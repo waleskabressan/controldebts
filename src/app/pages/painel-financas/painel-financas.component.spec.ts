@@ -1,6 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PainelFinancasComponent } from './painel-financas.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';import { PainelFinancasComponent } from './painel-financas.component';
+;
 
 describe('PainelFinancasComponent', () => {
   let component: PainelFinancasComponent;
