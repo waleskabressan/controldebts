@@ -1,2 +1,19 @@
-<p>painel-financas works!</p>
-<h1> seja bem vindo user</h1>
+<table>
+    <thead>
+      <tr>
+        <th >Status</th>
+        <th >Description</th>
+        <th >Price</th>
+        <th >Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of payments" [ngClass]="{'paid-row': payment.status === 'paid', 'to-pay-row': payment.status === 'toPay'}">
+        <td>{{ payment.status }}</td>
+        <td>{{ payment.description }}</td>
+        <td>{{ payment.price }}</td>
+        <td>{{ payment.date }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
