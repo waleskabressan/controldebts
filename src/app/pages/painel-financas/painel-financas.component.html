@@ -1,3 +1,4 @@
+<button> Add divida</button>
 <table>
     <thead>
       <tr>
@@ -14,10 +15,10 @@
         <td>{{ payment.description }}</td>
         <td>{{ payment.price }}</td>
         <td>{{ payment.date }}</td>
-        <td><button>delete</button>
-        <button>edit</button>
+        <td>
+          <button (click)="deletePayment(payment.id)">Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
-  
+ 
