@@ -62,60 +62,70 @@ export class PainelFinancasService {
       "date": "2024-03-14T14:07:48.141Z"
     },
     {
+      "id": 9,
       "status": "paid",
       "description": "Generic Granite Shirt",
       "price": "89.00",
       "date": "2024-03-17T00:52:49.406Z"
     },
     {
+      "id": 10,
       "status": "paid",
       "description": "Rustic Bronze Soap",
       "price": "64.00",
       "date": "2024-03-23T23:07:58.514Z"
     },
     {
+      "id": 11,
       "status": "toPay",
       "description": "Modern Concrete Chips",
       "price": "145.00",
       "date": "2024-03-26T08:04:47.422Z"
     },
     {
+      "id": 12,
       "status": "paid",
       "description": "Oriental Frozen Pizza",
       "price": "825.00",
       "date": "2024-03-03T23:26:22.027Z"
     },
     {
+      "id": 13,
       "status": "paid",
       "description": "Refined Metal Chips",
       "price": "113.00",
       "date": "2024-03-25T11:25:48.394Z"
     },
     {
+      "id": 14,
       "status": "paid",
       "description": "Recycled Soft Sausages",
       "price": "282.00",
       "date": "2024-03-28T16:51:06.824Z"
     },
     {
+      "id": 15,
       "status": "toPay",
       "description": "Recycled Frozen Chicken",
       "price": "621.00",
       "date": "2024-03-25T12:04:49.235Z"
     },
     {
+      "id": 16,
       "status": "toPay",
       "description": "Awesome Wooden Car",
       "price": "579.00",
       "date": "2024-03-27T23:23:45.731Z"
     },
     {
+      "id": 17,
       "status": "toPay",
       "description": "Sleek Plastic Shirt",
       "price": "54.00",
       "date": "2024-03-21T11:56:53.817Z"
     },
     {
+      "id": 18,
       "status": "paid",
       "description": "Generic Fresh Table",
       "price": "152.00",
@@ -141,5 +151,13 @@ export class PainelFinancasService {
 
   deletePayment(id: number): void {
     this.payments = this.payments.filter(payment => payment.id !== id);
+  }
+  editPayment(updatedPayment: any): any {
+    const index = this.payments.findIndex(payment => payment.id === updatedPayment.id);
+    if (index !== -1) {
+      this.payments[index] = updatedPayment;
+      return this.payments[index]; // retorna o pagamento editado
+    }
+    return null; // retorna null se o pagamento não for encontrado
   }
 }
