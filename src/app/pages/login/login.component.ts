@@ -7,7 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -37,13 +36,17 @@ export class LoginComponent {
   }
 
   submit() {
-    this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-      next: () => {
-        this.toastrService.success("Login feito com sucesso"),
-        this.router.navigate(["painel-financas"])
-      },
-      error: () => this.toastrService.error ("Erro inesperado! Tente novamente"),
-    })
+    const isValidLogin = this.loginService.login(
+      this.loginForm.value.email, 
+      this.loginForm.value.password
+    )
+    if(isValidLogin){
+      this.toastrService.success("Login feito com sucesso");
+      this.router.navigate(["painel-financas"]);
+    }else{
+      this.toastrService.error ("Email ou senha incorretos!");
+    }
+     
   }
 
   navigate() {

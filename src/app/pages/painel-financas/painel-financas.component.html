@@ -13,7 +13,7 @@
     <tr *ngIf="editedPayment">
       <td><input type="text" [(ngModel)]="editedPayment.status"></td>
       <td><input type="text" [(ngModel)]="editedPayment.description"></td>
-      <td><input type="number" [(ngModel)]="editedPayment.price"></td>
+      <td><input type="text" [(ngModel)]="editedPayment.price"></td>
       <td><input type="text" [(ngModel)]="editedPayment.date"></td>
       <td>
         <button (click)="saveNewDebt()">Save</button>

@@ -1,29 +1,40 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
-import { LoginResponse } from '../type/login-response.type';
-import { tap } from 'rxjs';
+import { of, tap } from 'rxjs';
+import { User } from '../type/user.type';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
-  apiUrl: string = "http://localhost:8080/auth"
+  login(email: string, password: string): boolean {
+    const users: User[] = JSON.parse(localStorage.getItem('users') ?? '') || [];
 
-  constructor(private httpClient: HttpClient) { }
-  login(email: string, password: string){
-    return this.httpClient.post<LoginResponse>(this.apiUrl + "/login", {email, password}).pipe(
-      tap((value) => {
-        sessionStorage.setItem("auth-token", value.token)
-        sessionStorage.setItem("username", value.name)
-      })
-    )
+    for (let cont = 0; cont < users.length; cont++) {
+      if (email === users[cont].email) {
+        if (password === users[cont].password) {
+          localStorage.setItem('logged', JSON.stringify(users[cont]));
+          return true;
+        }
+      }
+    }
+    return false;
   }
-  signup(name: string, email: string, password: string){
-    return this.httpClient.post<LoginResponse>(this.apiUrl + "/register", {name, email, password}).pipe(
-      tap((value) => {
-        sessionStorage.setItem("auth-token", value.token)
-        sessionStorage.setItem("username", value.name)
-      })
-    )
+
+  signup(name: string, email: string, password: string) {
+    // Recupera todos os usuários do localStorage
+    const users: User[] = JSON.parse(localStorage.getItem('users') ??  '[]') || [];
+
+    users.push({ name, email, password });
+
+    // Salva os usuários no localStorage com o novo usuário
+    localStorage.setItem('users', JSON.stringify(users));
+
+    return 'ok';
+  }
+
+  logout() {
+    localStorage.removeItem('logged');
+    return;
   }
 }
