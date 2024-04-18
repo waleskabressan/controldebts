@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PainelFinancasService } from './services/painel-financas.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,11 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent  implements OnInit{
   title = 'controldebts';
+  constructor(private paymentService: PainelFinancasService){}
+
+  ngOnInit(): void {
+    this.paymentService.initializeData();
+  }
 }

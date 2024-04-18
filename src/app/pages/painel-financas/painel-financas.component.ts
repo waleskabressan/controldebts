@@ -29,8 +29,14 @@ export class PainelFinancasComponent implements OnInit {
     };
   }
   
-  saveNewDebt() {
+  save() {
+    
     if (this.editedPayment.status && this.editedPayment.description && this.editedPayment.price && this.editedPayment.date) {
+      if(this.editedPayment.id){
+        this.paymentsService.updatePayment(this.editedPayment)
+      }else{
+        
+      }
       this.paymentsService.createPayment(this.editedPayment);
       this.editedPayment = null;
       this.loadPayments();
@@ -57,8 +63,8 @@ export class PainelFinancasComponent implements OnInit {
   }
 
   saveEditedPayment(): void {
-    if (this.editedPayment) {
-      this.paymentsService.updatePayment(this.editedPayment);
+    if (this.editPayment) {
+      this.paymentsService.updatePayment(this.editPayment);
       this.editedPayment = null; // Limpa o pagamento em edição
       this.loadPayments(); // Recarrega os pagamentos após a edição
     }
