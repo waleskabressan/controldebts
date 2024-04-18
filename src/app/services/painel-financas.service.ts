@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Payment } from '../type/payment.type';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ export class PainelFinancasService {
   private storageKey = 'payments';
   constructor() { }
 
-  getPayments(): any[] {
+  getPayments(): Payment[] {
     const paymentString = localStorage.getItem(this.storageKey);
     return paymentString ? JSON.parse (paymentString) : [];
   }

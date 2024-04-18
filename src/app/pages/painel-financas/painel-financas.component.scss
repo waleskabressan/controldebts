@@ -1,4 +1,7 @@
+@import "../../../styles/variables.scss";
+
 table {
+  color: black !important;
   width: 100%;
   border-collapse: collapse;
 }
@@ -32,5 +35,14 @@ th {
 
 .to-pay-row {
   background-color: #ffcdd2;
+}
+
+.header-table {
+  background-color: $blue-bg;
+  color: $text-color;
+}
+
+.cell-header {
+  text-align: center;
 }
 
