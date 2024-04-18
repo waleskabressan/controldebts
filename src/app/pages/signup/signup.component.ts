@@ -45,13 +45,17 @@ export class SignupComponent {
   }
 
   submit() {
-    this.loginService.signup( this.signupForm.value.name, this.signupForm.value.email, this.signupForm.value.password).subscribe({
-      next: () => {
-        this.toastrService.success("Cadastro feito com sucesso"),
-        this.navigate()
-      },
-      error: () => this.toastrService.error ("Erro inesperado! Tente novamente"),
-    })
+    const validSignup = this.loginService.signup( 
+      this.signupForm.value.name,
+      this.signupForm.value.email,
+      this.signupForm.value.password
+    ); 
+    if(validSignup){
+      this.toastrService.success("Cadastro feito com sucesso"),
+      this.navigate();
+    }else{
+      this.toastrService.error ("Email ou senha incorretos!");
+    }
   }
 
   navigate() {

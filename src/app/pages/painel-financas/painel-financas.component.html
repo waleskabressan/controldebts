@@ -1,19 +1,34 @@
+<button (click)="addNewDebt()"> Add divida</button>
 <table>
-    <thead>
-      <tr>
-        <th >Status</th>
-        <th >Description</th>
-        <th >Price</th>
-        <th >Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let payment of payments" [ngClass]="{'paid-row': payment.status === 'paid', 'to-pay-row': payment.status === 'toPay'}">
-        <td>{{ payment.status }}</td>
-        <td>{{ payment.description }}</td>
-        <td>{{ payment.price }}</td>
-        <td>{{ payment.date }}</td>
-      </tr>
-    </tbody>
-  </table>
-  
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="editedPayment">
+      <td><input type="text" [(ngModel)]="editedPayment.status"></td>
+      <td><input type="text" [(ngModel)]="editedPayment.description"></td>
+      <td><input type="text" [(ngModel)]="editedPayment.price"></td>
+      <td><input type="text" [(ngModel)]="editedPayment.date"></td>
+      <td>
+        <button (click)="saveNewDebt()">Save</button>
+        <button (click)="cancelNewDebt()">Cancel</button>
+      </td>
+    </tr>
+    <tr *ngFor="let payment of payments" [ngClass]="{'paid-row': payment.status === 'paid', 'to-pay-row': payment.status === 'toPay'}">
+      <td>{{ payment.status }}</td>
+      <td>{{ payment.description }}</td>
+      <td>{{ payment.price }}</td>
+      <td>{{ payment.date }}</td>
+      <td>
+        <button (click)="editPayment(payment)">Edit</button>
+        <button (click)="deletePayment(payment.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
