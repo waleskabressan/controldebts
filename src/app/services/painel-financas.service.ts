@@ -21,18 +21,12 @@ export class PainelFinancasService {
 
   updatePayment(updatedPayment: any): void {
     const payments = this.getPayments();
-
-
-    //percorre todos os itens do array (tipo um for) e retorna um array alterando as informações, funciona assim: 
-        // for (let count = 0; count < payments.length; count++){
-        //   const payment = payments[count]
-    const newArrayPayments = payments.map((payment) => {
-      if(payment.id == updatedPayment.id){
-        return updatedPayment
-      }else{
-        return payment
-      }
-    })
+    let newArrayPayments = [];
+    const existingPaymentIndex = payments.findIndex((payment) => payment.id === updatedPayment.id)
+    if (existingPaymentIndex >= 0) {
+      newArrayPayments = payments.splice(existingPaymentIndex, 1, updatedPayment);
+    }
+    newArrayPayments.push(updatedPayment);
     localStorage.setItem(this.storageKey, JSON.stringify(newArrayPayments))
   }
   

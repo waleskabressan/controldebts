@@ -9,6 +9,11 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { FormPaymentComponent } from './form-payment/form-payment.component';
 
+enum PaymentStatuses {
+  TOPAY = 'toPay',
+  PAID = 'paid'
+}
+
 @Component({
   selector: 'app-painel-financas',
   standalone: true,
@@ -16,7 +21,10 @@ import { FormPaymentComponent } from './form-payment/form-payment.component';
   templateUrl: './painel-financas.component.html',
   styleUrls: ['./painel-financas.component.scss']
 })
+
+
 export class PainelFinancasComponent implements OnInit {
+  isEditMode = false;
   payments: Payment[] = [];
   editedPayment: Payment | null = null;
   displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
@@ -72,6 +80,8 @@ export class PainelFinancasComponent implements OnInit {
     this.dialog.open(FormPaymentComponent, {
       width: '250px',
     });
+    this.editedPayment = { ...payment }; // Faz uma cópia do pagamento para evitar modificar diretamente o original
+
   }
   saveEditedPayment(): void {
     if (this.editPayment) {
