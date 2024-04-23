@@ -7,7 +7,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Payment } from '../../../type/payment.type';
+import { Payment} from '../../../type/payment.type';
 import { PainelFinancasService } from '../../../services/painel-financas.service';
 
 export interface DialogData {

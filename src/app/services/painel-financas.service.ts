@@ -21,7 +21,7 @@ export class PainelFinancasService {
 
   updatePayment(updatedPayment: any): void {
     const payments = this.getPayments();
-    let newArrayPayments = [];
+    let newArrayPayments : Payment[] = [];
     const existingPaymentIndex = payments.findIndex((payment) => payment.id === updatedPayment.id)
     if (existingPaymentIndex >= 0) {
       newArrayPayments = payments.splice(existingPaymentIndex, 1, updatedPayment);
