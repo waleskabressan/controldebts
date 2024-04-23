@@ -1,12 +1,36 @@
-<h2 mat-dialog-title>Hi </h2>
+<h2 mat-dialog-title>Cadastre uma nova dívida </h2>
 <mat-dialog-content>
-  <p>What's your favorite animal?</p>
+  <p>Descricption:</p>
   <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
+    <mat-label>Descricption:</mat-label>
+    <input matInput>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-content>
+  <p>Status:</p>
+  <mat-form-field>
+    <mat-label>toPaid or paid:</mat-label>
+    <input matInput>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-content>
+  <p>Price:</p>
+  <mat-form-field>
+    <mat-label>Price:</mat-label>
     <input matInput >
   </mat-form-field>
 </mat-dialog-content>
+<mat-dialog-content>
+  <p>Date:</p>
+  <mat-form-field>
+    <mat-label>Choose a date</mat-label>
+    <input matInput [matDatepicker]="picker">
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+</mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button>No Thanks</button>
-  <button mat-button cdkFocusInitial>Ok</button>
+  <button mat-button (click)=" onNoClick( )">No Thanks</button>
+  <button mat-button cdkFocusInitial (click)="save()">Ok</button>
 </mat-dialog-actions>

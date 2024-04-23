@@ -27,6 +27,9 @@ export class PainelFinancasComponent implements OnInit {
     this.loadPayments();
   }
   addNewDebt() {
+    this.dialog.open(FormPaymentComponent, {
+      width: '250px',
+    });
     this.editedPayment = {
       id: this.payments.length + 1,
       status: '',
@@ -66,12 +69,10 @@ export class PainelFinancasComponent implements OnInit {
   }
 
   editPayment(payment: any): void {
-    //this.editedPayment = { ...payment }; // Faz uma cópia do pagamento para evitar modificar diretamente o original
     this.dialog.open(FormPaymentComponent, {
       width: '250px',
     });
   }
-
   saveEditedPayment(): void {
     if (this.editPayment) {
       this.paymentsService.updatePayment(this.editPayment);
