@@ -8,6 +8,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { FormPaymentComponent } from './form-payment/form-payment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 enum PaymentStatuses {
   TOPAY = 'toPay',
@@ -17,7 +20,7 @@ enum PaymentStatuses {
 @Component({
   selector: 'app-painel-financas',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, MatOptionModule],
   templateUrl: './painel-financas.component.html',
   styleUrls: ['./painel-financas.component.scss']
 })
@@ -28,6 +31,9 @@ export class PainelFinancasComponent implements OnInit {
   payments: Payment[] = [];
   editedPayment: Payment | null = null;
   displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
+  selectedStatus: string = 'All';
+  paymentStatusOptions: string [] = ['All', 'Topay', 'paid'];
+  totalFiltered: number = 0;
 
   constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog) { }
 
@@ -35,36 +41,22 @@ export class PainelFinancasComponent implements OnInit {
     this.loadPayments();
   }
   addNewDebt() {
-    this.dialog.open(FormPaymentComponent, {
+    const modal =  this.dialog.open(FormPaymentComponent, {
       width: '250px',
-    });
-    this.editedPayment = {
-      id: this.payments.length + 1,
-      status: '',
-      description: '',
-      price: '',
-      date: ''
-    };
-  }
-  
-  save() {
-    
-    if (this.editedPayment?.status && this.editedPayment?.description && this.editedPayment?.price && this.editedPayment?.date) {
-      if(this.editedPayment?.id){
-        this.paymentsService.updatePayment(this.editedPayment)
-      }else{
-        
+      data: {
+        id: this.payments.length + 1,
+        status: '',
+        description: '',
+        price: '',
+        date: new Date(),
       }
-      this.paymentsService.createPayment(this.editedPayment);
-      this.editedPayment = null;
-      this.loadPayments();
-    } else {
-      console.log('Por favor, preencha todos os campos.');
-    }
-  }
-  
-  cancelNewDebt() {
-    this.editedPayment = null;
+    });
+    
+    modal.afterClosed().subscribe(result => {
+      if(result == 'sucesso'){
+        this.loadPayments();
+      }
+    });
   }
 
   loadPayments(): void{
@@ -76,23 +68,41 @@ export class PainelFinancasComponent implements OnInit {
     this.loadPayments();
   }
 
-  editPayment(payment: any): void {
-    this.dialog.open(FormPaymentComponent, {
-      width: '250px',
+  async editPayment(payment: Payment): Promise<void> {
+    const modal = this.dialog.open(FormPaymentComponent, {
+      data: {
+        id: payment.id,
+        description: payment.description,
+        status: payment.status,
+        price: payment.price,
+        data: payment.date,
+      }
     });
-    this.editedPayment = { ...payment }; // Faz uma cópia do pagamento para evitar modificar diretamente o original
 
+    modal.afterClosed().subscribe(result => {
+      if(result == 'sucesso'){
+        this.loadPayments();
+      }
+    });
   }
-  saveEditedPayment(): void {
-    if (this.editPayment) {
-      this.paymentsService.updatePayment(this.editPayment);
-      this.editedPayment = null; // Limpa o pagamento em edição
-      this.loadPayments(); // Recarrega os pagamentos após a edição
+
+  
+  applyFilter(): void {
+    if (this.selectedStatus === 'All') {
+      this.loadPayments();
+      this.totalFiltered = this.calculateTotal();
+    } else {
+      const payments = this.paymentsService.getPayments();
+      this.payments = payments.filter(payment => payment.status.toLowerCase() === this.selectedStatus.toLowerCase());
+      this.totalFiltered = this.calculateTotalFiltered();
     }
   }
-
-  cancelEdit(): void {
-    this.editedPayment = null; // Cancela a edição ao limpar o pagamento em edição
-  }
   
+  calculateTotal(): number {
+    const allPayments = this.paymentsService.getPayments();
+    return allPayments.reduce((total, payment) => total + parseFloat(payment.price), 0);
+  }
+  calculateTotalFiltered(): number {
+    return this.payments.reduce((total, payment) => total + parseFloat(payment.price), 0);
+  }
 }

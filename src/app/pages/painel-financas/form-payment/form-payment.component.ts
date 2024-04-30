@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -11,8 +11,11 @@ import { Payment} from '../../../type/payment.type';
 import { PainelFinancasService } from '../../../services/painel-financas.service';
 
 export interface DialogData {
-  price: string
-  description: string 
+  id: number;
+  price: string;
+  description: string ;
+  status: string;
+  date: Date;
 }
 
 @Component({
@@ -24,33 +27,34 @@ export interface DialogData {
   styleUrl: './form-payment.component.scss'
 })
 export class FormPaymentComponent implements OnInit {
-  price: string = '';
-  description: string = '';
   payments: Payment[] = [];
   editedPayment: Payment | null = null;
   displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
+
+  formPayment = new FormGroup({
+    id: new FormControl<number>(-1),
+    date: new FormControl<Date>(new Date()),
+    status: new FormControl<string>(''),
+    price:  new FormControl<string>(''),
+    description: new FormControl<string>('')
+  })
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<DialogOverviewExampleDialog>, private paymentsService: PainelFinancasService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {}
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      data: { price: this.price, description: this.description },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.description = result;
-    });
-    
-  }
-  onNoClick(): void {
+   onNoClick(): void {
     this.dialogRef.close();
   }
   
   ngOnInit(): void {
-    this.loadPayments();
+    this.formPayment.patchValue({
+      date: this.data.date ? this.data.date : new Date (),
+      description: this.data.description,
+      price: this.data.price,
+      status: this.data.status,
+      id: this.data.id
+    })
   }
   addNewDebt() {
     this.dialog.open(FormPaymentComponent, {
@@ -61,21 +65,20 @@ export class FormPaymentComponent implements OnInit {
       status: '',
       description: '',
       price: '',
-      date: ''
+   
     };
   }
   
   save() {
-    
-    if (this.editedPayment?.status && this.editedPayment?.description && this.editedPayment?.price && this.editedPayment?.date) {
-      if(this.editedPayment?.id){
-        this.paymentsService.updatePayment(this.editedPayment)
+    const value = this.formPayment.value
+    if (value?.status && value?.description && value?.price && value?.date) {
+      if(this.formPayment.value?.id){
+        this.paymentsService.updatePayment(value as Payment)
       }else{
-        
+        this.paymentsService.createPayment({...value as Payment, id: null});
       }
-      this.paymentsService.createPayment(this.editedPayment);
-      this.editedPayment = null;
-      this.loadPayments();
+
+      this.dialogRef.close('sucesso');
     } else {
       console.log('Por favor, preencha todos os campos.');
     }
@@ -86,7 +89,8 @@ export class FormPaymentComponent implements OnInit {
   }
 
   loadPayments(): void{
-    this.payments = this.paymentsService.getPayments();
+    const paymentsFromLocalStorage = JSON.parse(localStorage.getItem('payments') || '[]');
+    this.payments = paymentsFromLocalStorage;
   }
   
   deletePayment(id: number): void {
@@ -94,17 +98,10 @@ export class FormPaymentComponent implements OnInit {
     this.loadPayments();
   }
 
-  editPayment(payment: any): void {
+  editPayment(payment: Payment): void {
     this.dialog.open(FormPaymentComponent, {
       width: '250px',
     });
-  }
-  saveEditedPayment(): void {
-    if (this.editPayment) {
-      this.paymentsService.updatePayment(this.editPayment);
-      this.editedPayment = null; // Limpa o pagamento em edição
-      this.loadPayments(); // Recarrega os pagamentos após a edição
-    }
   }
 
   cancelEdit(): void {
@@ -119,4 +116,12 @@ export class DialogOverviewExample {
 }
 
 export class DialogOverviewExampleDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

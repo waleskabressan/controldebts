@@ -8,25 +8,30 @@ export class PainelFinancasService {
   private storageKey = 'payments';
   constructor() { }
 
+  
   getPayments(): Payment[] {
     const paymentString = localStorage.getItem(this.storageKey);
     return paymentString ? JSON.parse (paymentString) : [];
   }
-
   createPayment(payment: any) : void{
     const payments = this.getPayments();
-    payments.push(payment);
+    payment.id = payments.length;
+    payments.push(payment); 
     localStorage.setItem(this.storageKey, JSON.stringify(payments));
   }
 
-  updatePayment(updatedPayment: any): void {
+  updatePayment(updatedPayment: Payment): void {
     const payments = this.getPayments();
-    let newArrayPayments : Payment[] = [];
-    const existingPaymentIndex = payments.findIndex((payment) => payment.id === updatedPayment.id)
-    if (existingPaymentIndex >= 0) {
-      newArrayPayments = payments.splice(existingPaymentIndex, 1, updatedPayment);
-    }
-    newArrayPayments.push(updatedPayment);
+    //percorre todos os itens do array (tipo um for) e retorna um array alterando as informações, funciona assim: 
+        // for (let count = 0; count < payments.length; count++){
+        //   const payment = payments[count]
+    const newArrayPayments = payments.map((payment) => {
+      if(payment.id == updatedPayment.id){
+        return updatedPayment
+      }else{
+        return payment
+      }
+    })
     localStorage.setItem(this.storageKey, JSON.stringify(newArrayPayments))
   }
   
@@ -183,5 +188,9 @@ export class PainelFinancasService {
     if(existingData.length == 0){
       localStorage.setItem(this.storageKey, JSON.stringify(initialData));
     }
+  }
+
+  getPaymentsByStatus(payments: Payment[], status: string): Payment [] {
+    return payments.filter( payment  => payment.status === status);
   }
 }
