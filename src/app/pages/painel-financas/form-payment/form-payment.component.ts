@@ -9,9 +9,10 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Payment} from '../../../type/payment.type';
 import { PainelFinancasService } from '../../../services/painel-financas.service';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface DialogData {
-  id: number;
+  id: string;
   price: string;
   description: string ;
   status: string;
@@ -32,7 +33,7 @@ export class FormPaymentComponent implements OnInit {
   displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
 
   formPayment = new FormGroup({
-    id: new FormControl<number>(-1),
+    id: new FormControl<string>('-1'),
     date: new FormControl<Date>(new Date()),
     status: new FormControl<string>(''),
     price:  new FormControl<string>(''),
@@ -61,7 +62,7 @@ export class FormPaymentComponent implements OnInit {
       width: '250px',
     });
     this.editedPayment = {
-      id: this.payments.length + 1,
+      id:  '',
       status: '',
       description: '',
       price: '',
@@ -93,7 +94,7 @@ export class FormPaymentComponent implements OnInit {
     this.payments = paymentsFromLocalStorage;
   }
   
-  deletePayment(id: number): void {
+  deletePayment(id: string): void {
     this.paymentsService.deletePayment(id);
     this.loadPayments();
   }

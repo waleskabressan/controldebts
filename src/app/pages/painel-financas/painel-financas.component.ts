@@ -30,10 +30,13 @@ export class PainelFinancasComponent implements OnInit {
   isEditMode = false;
   payments: Payment[] = [];
   editedPayment: Payment | null = null;
-  displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
+  displayedColumns: string[] = ['description', 'price', 'date', 'action'];
   selectedStatus: string = 'All';
   paymentStatusOptions: string [] = ['All', 'Topay', 'paid'];
   totalFiltered: number = 0;
+  totalToPay: number = 0;
+  totalPaid: number = 0;
+  difference: number = 0;
 
   constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog) { }
 
@@ -44,7 +47,7 @@ export class PainelFinancasComponent implements OnInit {
     const modal =  this.dialog.open(FormPaymentComponent, {
       width: '250px',
       data: {
-        id: this.payments.length + 1,
+        id: '',
         status: '',
         description: '',
         price: '',
@@ -63,7 +66,7 @@ export class PainelFinancasComponent implements OnInit {
     this.payments = this.paymentsService.getPayments();
   }
   
-  deletePayment(id: number): void {
+  deletePayment(id: string): void {
     this.paymentsService.deletePayment(id);
     this.loadPayments();
   }
@@ -105,4 +108,6 @@ export class PainelFinancasComponent implements OnInit {
   calculateTotalFiltered(): number {
     return this.payments.reduce((total, payment) => total + parseFloat(payment.price), 0);
   }
+
+  
 }

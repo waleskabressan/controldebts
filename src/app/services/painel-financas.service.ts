@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Payment } from '../type/payment.type';
-
+import { v4 as uuidv4 } from 'uuid';
 @Injectable({
   providedIn: 'root'
 })
 export class PainelFinancasService {
   private storageKey = 'payments';
+  
+
   constructor() { }
 
   
@@ -15,7 +17,7 @@ export class PainelFinancasService {
   }
   createPayment(payment: any) : void{
     const payments = this.getPayments();
-    payment.id = payments.length;
+    payment.id = uuidv4();
     payments.push(payment); 
     localStorage.setItem(this.storageKey, JSON.stringify(payments));
   }
@@ -36,7 +38,7 @@ export class PainelFinancasService {
   }
   
 
-  deletePayment(id: number): void {
+  deletePayment(id: string): void {
     let payments = this.getPayments();
     payments = payments.filter(payment => payment.id !== id);
     localStorage.setItem(this.storageKey, JSON.stringify(payments));
@@ -193,4 +195,6 @@ export class PainelFinancasService {
   getPaymentsByStatus(payments: Payment[], status: string): Payment [] {
     return payments.filter( payment  => payment.status === status);
   }
+
+ 
 }

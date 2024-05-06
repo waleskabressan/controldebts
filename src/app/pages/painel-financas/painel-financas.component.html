@@ -43,12 +43,14 @@
   </mat-form-field>
 </div>
 <div class="total-container">
-  <span>Total: {{ calculateTotal() }}</span>
+  <h2>Total: {{ calculateTotal() }}</h2>
 </div>
 
 <div class="total-container" *ngIf="selectedStatus !== 'All'">
-  <span>Total ({{ selectedStatus }}): {{ totalFiltered }}</span>
+  <h2>Total ({{ selectedStatus }}): {{ totalFiltered }}</h2>
 </div>
+
+
 
 <div class="demo-button-container">
   <button mat-raised-button (click)= "addNewDebt()" class="demo-button">
@@ -58,10 +60,10 @@
 
 <table mat-table [dataSource]="payments" class="mat-elevation-z8">
 
-  <ng-container matColumnDef="id">
+  <!-- <ng-container matColumnDef="id">
     <th mat-header-cell class="cell-header" *matHeaderCellDef> id </th>
     <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <ng-container matColumnDef="description">
     <th mat-header-cell class="cell-header" *matHeaderCellDef>  Description</th>
