@@ -1,87 +1,48 @@
-<!-- <button (click)="addNewDebt()"> Add divida</button>
-<table>
-  <thead>
-    <tr>
-      <th>Status</th>
-      <th>Description</th>
-      <th>Price</th>
-      <th>Date</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngIf="editedPayment">
-      <td><input type="text" [(ngModel)]="editedPayment.status"></td>
-      <td><input type="text" [(ngModel)]="editedPayment.description"></td>
-      <td><input type="text" [(ngModel)]="editedPayment.price"></td>
-      <td><input type="text" [(ngModel)]="editedPayment.date"></td>
-      <td>
-        <button (click)="save()">Save</button>
-        <button (click)="cancelNewDebt()">Cancel</button>
-      </td>
-    </tr>
-    <tr *ngFor="let payment of payments" [ngClass]="{'paid-row': payment.status === 'paid', 'to-pay-row': payment.status === 'toPay'}">
-      <td>{{ payment.status }}</td>
-      <td>{{ payment.description }}</td>
-      <td>{{ payment.price }}</td>
-      <td>{{ payment.date }}</td>
-      <td>
-        <button (click)="editPayment(payment)">Edit</button>
-        <button (click)="deletePayment(payment.id)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table> -->
 <div class=" filter-container">
+  <h2>Filtrar por Status de pagamento:</h2>
   <mat-form-field appearence = "fill">
-    <mat-label>Filter by Status</mat-label>
+    <mat-label></mat-label>
     <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilter()">
       <mat-option *ngFor="let status of paymentStatusOptions" [value]="status">
-        {{ status }}
+        {{ statusTraduzido [status] || status}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 </div>
+
 <div class="total-container">
-  <h2>Total: {{ calculateTotal() }}</h2>
+  <h2>Total: {{ calculateTotal() | currency: 'BRL' : 'symbol': '1.2-2' }}</h2>
 </div>
 
 <div class="total-container" *ngIf="selectedStatus !== 'All'">
-  <h2>Total ({{ selectedStatus }}): {{ totalFiltered }}</h2>
+  <h2>Total ({{ statusTraduzido[selectedStatus] }}): {{ totalFiltered |currency: 'BRL' : 'symbol': '1.2-2' }}</h2>
 </div>
-
-
 
 <div class="demo-button-container">
   <button mat-raised-button (click)= "addNewDebt()" class="demo-button">
-    Add debts
+    Nova Dívida
   </button>
 </div>
 
 <table mat-table [dataSource]="payments" class="mat-elevation-z8">
 
-  <!-- <ng-container matColumnDef="id">
-    <th mat-header-cell class="cell-header" *matHeaderCellDef> id </th>
-    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.id}} </td>
-  </ng-container> -->
-
   <ng-container matColumnDef="description">
-    <th mat-header-cell class="cell-header" *matHeaderCellDef>  Description</th>
+    <th mat-header-cell class="cell-header" *matHeaderCellDef>  Descrição</th>
     <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.description}} </td>
   </ng-container>
 
   <ng-container matColumnDef="price">
-    <th mat-header-cell class="cell-header" *matHeaderCellDef> Price </th>
-    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.price}} </td>
+    <th mat-header-cell class="cell-header" *matHeaderCellDef> Valor </th>
+    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.price | currency: 'BRL' : 'symbol': '1.2-2'}} </td>
   </ng-container>
 
   <ng-container matColumnDef="date">
-    <th mat-header-cell class="cell-header" *matHeaderCellDef> Date </th>
+    <th mat-header-cell class="cell-header" *matHeaderCellDef> Data </th>
     <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.date}} </td>
   </ng-container>
 
   <ng-container matColumnDef="action">
-    <th mat-header-cell class="cell-header" *matHeaderCellDef> Action </th>
+    <th mat-header-cell class="cell-header" *matHeaderCellDef> Ação </th>
     <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element">
       <button mat-icon-button (click)="editPayment(element)">
         <mat-icon>edit</mat-icon>

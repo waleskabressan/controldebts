@@ -1,27 +1,28 @@
-<h2 mat-dialog-title>Cadastre uma nova dívida </h2>
-<mat-dialog-content>
-  <form [formGroup]="formPayment">
 
-  
-  <p>Descricption:</p>
+<mat-dialog-content class="area" data-simplebar>
+  <form [formGroup]="formPayment">
+  <p>Descrição:</p>
   <mat-form-field>
-    <mat-label>Description:</mat-label>
+    <mat-label>Descrição:</mat-label>
     <input matInput formControlName="description" >
   </mat-form-field>
 
-  <p>Status:</p>
+  <p>Situação:</p>
   <mat-form-field>
-    <mat-label>toPaid or paid:</mat-label>
-    <input matInput formControlName="status">
+    <mat-label>Situação:</mat-label>
+    <mat-select formControlName="status">
+      <mat-option value="toPay">Aguardando pagamento</mat-option>
+      <mat-option value="paid">Pago</mat-option>
+    </mat-select>
   </mat-form-field>
 
-  <p>Price:</p>
+  <p>Valor:</p>
   <mat-form-field>
-    <mat-label>Price:</mat-label>
+    <mat-label>Valor:</mat-label>
     <input matInput  formControlName="price">
   </mat-form-field>
 
-  <p>Date:</p>
+  <p>Data:</p>
   <mat-form-field>
     <mat-label>Escolha uma data:</mat-label>
     <input matInput [matDatepicker]="calendario" formControlName="date">
@@ -32,6 +33,6 @@
 </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)=" onNoClick( )">No Thanks</button>
-  <button mat-button cdkFocusInitial (click)="save()">Ok</button>
+  <button mat-button (click)=" onNoClick( )">Sair</button>
+  <button mat-button cdkFocusInitial (click)="save()">Salvar</button>
 </mat-dialog-actions>

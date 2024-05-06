@@ -12,10 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 
-enum PaymentStatuses {
-  TOPAY = 'toPay',
-  PAID = 'paid'
-}
+
 
 @Component({
   selector: 'app-painel-financas',
@@ -32,11 +29,13 @@ export class PainelFinancasComponent implements OnInit {
   editedPayment: Payment | null = null;
   displayedColumns: string[] = ['description', 'price', 'date', 'action'];
   selectedStatus: string = 'All';
-  paymentStatusOptions: string [] = ['All', 'Topay', 'paid'];
+  paymentStatusOptions: string [] = ['All', 'toPay', 'paid'];
   totalFiltered: number = 0;
-  totalToPay: number = 0;
-  totalPaid: number = 0;
-  difference: number = 0;
+  statusTraduzido : { [key: string]: string } ={
+    'toPay' : 'Aguardando Pagamento',
+    'paid' : 'Pago',
+    'All' : 'Todos'
+  }
 
   constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog) { }
 
@@ -45,7 +44,6 @@ export class PainelFinancasComponent implements OnInit {
   }
   addNewDebt() {
     const modal =  this.dialog.open(FormPaymentComponent, {
-      width: '250px',
       data: {
         id: '',
         status: '',
@@ -58,6 +56,7 @@ export class PainelFinancasComponent implements OnInit {
     modal.afterClosed().subscribe(result => {
       if(result == 'sucesso'){
         this.loadPayments();
+        this.selectedStatus = 'All'
       }
     });
   }

@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Payment} from '../../../type/payment.type';
 import { PainelFinancasService } from '../../../services/painel-financas.service';
 import { v4 as uuidv4 } from 'uuid';
+import { MatSelectModule } from '@angular/material/select';
 
 export interface DialogData {
   id: string;
@@ -22,7 +23,7 @@ export interface DialogData {
 @Component({
   selector: 'app-form-payment', 
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatDatepickerModule, MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose,MatButtonModule], 
+  imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatDatepickerModule, MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose,MatButtonModule, MatSelectModule], 
   providers: [provideNativeDateAdapter()],
   templateUrl: './form-payment.component.html',
   styleUrl: './form-payment.component.scss'
@@ -33,10 +34,10 @@ export class FormPaymentComponent implements OnInit {
   displayedColumns: string[] = ['id', 'description', 'price', 'date', 'action'];
 
   formPayment = new FormGroup({
-    id: new FormControl<string>('-1'),
+    id: new FormControl<string>(''),
     date: new FormControl<Date>(new Date()),
     status: new FormControl<string>(''),
-    price:  new FormControl<string>(''),
+    price:  new FormControl<string>('toPay'),
     description: new FormControl<string>('')
   })
 
@@ -71,14 +72,14 @@ export class FormPaymentComponent implements OnInit {
   }
   
   save() {
-    const value = this.formPayment.value
+    const value = this.formPayment.value;
     if (value?.status && value?.description && value?.price && value?.date) {
       if(this.formPayment.value?.id){
-        this.paymentsService.updatePayment(value as Payment)
+        this.paymentsService.updatePayment(value as Payment);
       }else{
         this.paymentsService.createPayment({...value as Payment, id: null});
       }
-
+      
       this.dialogRef.close('sucesso');
     } else {
       console.log('Por favor, preencha todos os campos.');
