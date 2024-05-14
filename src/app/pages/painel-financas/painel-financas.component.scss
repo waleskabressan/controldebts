@@ -1,4 +1,7 @@
+@import "../../../styles/variables.scss";
+
 table {
+  color: black !important;
   width: 100%;
   border-collapse: collapse;
 }
@@ -32,5 +35,47 @@ th {
 
 .to-pay-row {
   background-color: #ffcdd2;
+}
+
+.header-table {
+  background-color: $blue-bg;
+  color: $text-color;
+}
+
+.cell-header {
+  text-align: center;
+}
+
+.filter-container, .total-container, .demo-button-container {
+  margin-bottom: 15px;
+  background-color: $blue-secondary-bg;
+  padding: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0;
+}
+.filter-container h2, .total-container h2 {
+  color: $text-color;
+}
+.filter-container mat-form-field {
+  width: 100%;
+}
+
+.filter-container .mat-form-field-wrapper {
+  background-color: $primary-color;
+}
+
+.demo-button-container button.demo-button {
+  background-color: $primary-color;
+  color: white;
+  padding: 20px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.demo-button-container button.demo-button:hover {
+  background-color: $secondary-color;
 }
 

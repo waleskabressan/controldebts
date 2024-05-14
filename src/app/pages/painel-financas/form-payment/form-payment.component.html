@@ -1,0 +1,38 @@
+
+<mat-dialog-content class="area" data-simplebar>
+  <form [formGroup]="formPayment">
+  <p>Descrição:</p>
+  <mat-form-field>
+    <mat-label>Descrição:</mat-label>
+    <input matInput formControlName="description" >
+  </mat-form-field>
+
+  <p>Situação:</p>
+  <mat-form-field>
+    <mat-label>Situação:</mat-label>
+    <mat-select formControlName="status">
+      <mat-option value="toPay">Aguardando pagamento</mat-option>
+      <mat-option value="paid">Pago</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <p>Valor:</p>
+  <mat-form-field>
+    <mat-label>0,000.00</mat-label>
+    <input matInput  formControlName="price">
+  </mat-form-field>
+
+  <p>Data:</p>
+  <mat-form-field>
+    <mat-label>Escolha uma data:</mat-label>
+    <input matInput [matDatepicker]="calendario" formControlName="date">
+    <mat-datepicker-toggle matIconSuffix [for]="calendario"></mat-datepicker-toggle>
+    <mat-datepicker #calendario></mat-datepicker>
+  </mat-form-field>
+
+</form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)=" onNoClick( )">Sair</button>
+  <button mat-button cdkFocusInitial (click)="save()">Salvar</button>
+</mat-dialog-actions>

@@ -2,70 +2,111 @@ import { Component, OnInit } from '@angular/core';
 import { PainelFinancasService } from '../../services/painel-financas.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {MatTableModule} from '@angular/material/table';
+import { Payment } from '../../type/payment.type';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { FormPaymentComponent } from './form-payment/form-payment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
+
 
 @Component({
   selector: 'app-painel-financas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, MatOptionModule],
   templateUrl: './painel-financas.component.html',
   styleUrls: ['./painel-financas.component.scss']
 })
-export class PainelFinancasComponent implements OnInit {
-  payments: any[] = [];
-  editedPayment: any = null;
 
-  constructor(private paymentsService: PainelFinancasService) { }
+
+export class PainelFinancasComponent implements OnInit {
+  isEditMode = false;
+  payments: Payment[] = [];
+  editedPayment: Payment | null = null;
+  displayedColumns: string[] = ['description', 'price', 'date', 'action'];
+  selectedStatus: string = 'All';
+  paymentStatusOptions: string [] = ['All', 'toPay', 'paid'];
+  totalFiltered: number = 0;
+  statusTraduzido : { [key: string]: string } ={
+    'toPay' : 'Aguardando Pagamento',
+    'paid' : 'Pago',
+    'All' : 'Todos'
+  }
+
+  constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loadPayments();
   }
   addNewDebt() {
-    this.editedPayment = {
-      id: this.payments.length + 1,
-      status: '',
-      description: '',
-      price: '',
-      date: ''
-    };
-  }
-  
-  saveNewDebt() {
-    if (this.editedPayment.status && this.editedPayment.description && this.editedPayment.price && this.editedPayment.date) {
-      this.paymentsService.createPayment(this.editedPayment);
-      this.editedPayment = null;
-      this.loadPayments();
-    } else {
-      console.log('Por favor, preencha todos os campos.');
-    }
-  }
-  
-  cancelNewDebt() {
-    this.editedPayment = null;
+    const modal =  this.dialog.open(FormPaymentComponent, {
+      data: {
+        id: '',
+        status: '',
+        description: '',
+        price: '',
+        date: new Date(),
+      }
+    });
+    
+    modal.afterClosed().subscribe(result => {
+      if(result == 'sucesso'){
+        this.loadPayments();
+        this.selectedStatus = 'All'
+      }
+    });
   }
 
   loadPayments(): void{
     this.payments = this.paymentsService.getPayments();
   }
   
-  deletePayment(id: number): void {
+  deletePayment(id: string): void {
     this.paymentsService.deletePayment(id);
     this.loadPayments();
   }
 
-  editPayment(payment: any): void {
-    this.editedPayment = { ...payment }; // Faz uma cópia do pagamento para evitar modificar diretamente o original
+  async editPayment(payment: Payment): Promise<void> {
+    const modal = this.dialog.open(FormPaymentComponent, {
+      data: {
+        id: payment.id,
+        description: payment.description,
+        status: payment.status,
+        price: payment.price,
+        data: payment.date,
+      }
+    });
+
+    modal.afterClosed().subscribe(result => {
+      if(result == 'sucesso'){
+        this.loadPayments();
+      }
+    });
   }
 
-  saveEditedPayment(): void {
-    if (this.editedPayment) {
-      this.paymentsService.updatePayment(this.editedPayment);
-      this.editedPayment = null; // Limpa o pagamento em edição
-      this.loadPayments(); // Recarrega os pagamentos após a edição
+  
+  applyFilter(): void {
+    if (this.selectedStatus === 'All') {
+      this.loadPayments();
+      this.totalFiltered = this.calculateTotal();
+    } else {
+      const payments = this.paymentsService.getPayments();
+      this.payments = payments.filter(payment => payment.status.toLowerCase() === this.selectedStatus.toLowerCase());
+      this.totalFiltered = this.calculateTotalFiltered();
     }
   }
-
-  cancelEdit(): void {
-    this.editedPayment = null; // Cancela a edição ao limpar o pagamento em edição
+  
+  calculateTotal(): number {
+    const allPayments = this.paymentsService.getPayments();
+    return allPayments.reduce((total, payment) => total + parseFloat(payment.price), 0);
   }
+  calculateTotalFiltered(): number {
+    return this.payments.reduce((total, payment) => total + parseFloat(payment.price), 0);
+  }
+
   
 }

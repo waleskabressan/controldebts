@@ -13,7 +13,7 @@ export class LoginService {
     for (let cont = 0; cont < users.length; cont++) {
       if (email === users[cont].email) {
         if (password === users[cont].password) {
-          localStorage.setItem('logged', JSON.stringify(users[cont]));
+          localStorage.setItem('s', JSON.stringify(users[cont]));
           return true;
         }
       }
