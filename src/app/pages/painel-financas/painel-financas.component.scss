@@ -21,20 +21,13 @@ th {
   font-weight: bold;
 }
 
-.paid {
-  color: green;
-}
-
-.to-pay {
-  color: red;
-}
 
 .paid-row {
-  background-color: #c8e6c9;
+  background-color: rgba(156, 233, 157, 0.862)
 }
 
 .to-pay-row {
-  background-color: #ffcdd2;
+  background-color: #ea8791;
 }
 
 .header-table {
@@ -67,7 +60,7 @@ th {
 
 .demo-button-container button.demo-button {
   background-color: $primary-color;
-  color: white;
+  color: rgba(255, 255, 255, 0.753);
   padding: 20px 30px;
   border: none;
   border-radius: 5px;

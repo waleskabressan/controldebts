@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { PainelFinancasService } from '../../services/painel-financas.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,24 +6,29 @@ import {MatTableModule} from '@angular/material/table';
 import { Payment } from '../../type/payment.type';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormPaymentComponent } from './form-payment/form-payment.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { DialogRef } from '@angular/cdk/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
 @Component({
   selector: 'app-painel-financas',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, MatOptionModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, MatOptionModule, NgxMaskDirective, NgxMaskPipe, MatDialogModule, ],
   templateUrl: './painel-financas.component.html',
   styleUrls: ['./painel-financas.component.scss']
 })
 
 
 export class PainelFinancasComponent implements OnInit {
+  newPayment: Payment = {id: '', status: '', description: '',price: '',};
   isEditMode = false;
   payments: Payment[] = [];
   editedPayment: Payment | null = null;
@@ -37,13 +42,14 @@ export class PainelFinancasComponent implements OnInit {
     'All' : 'Todos'
   }
 
-  constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog) { }
+  constructor(private paymentsService: PainelFinancasService, public dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadPayments();
   }
+  
   addNewDebt() {
-    const modal =  this.dialog.open(FormPaymentComponent, {
+      const modal =  this.dialog.open(FormPaymentComponent, {
       data: {
         id: '',
         status: '',
@@ -51,23 +57,38 @@ export class PainelFinancasComponent implements OnInit {
         price: '',
         date: new Date(),
       }
+
+      
     });
-    
     modal.afterClosed().subscribe(result => {
-      if(result == 'sucesso'){
+      if(result == 'sucesso' ){
+        const newPaymentStatus = result.status;
+        this.selectedStatus = newPaymentStatus;
         this.loadPayments();
-        this.selectedStatus = 'All'
       }
     });
   }
 
   loadPayments(): void{
-    this.payments = this.paymentsService.getPayments();
+    const allPayments = this.paymentsService.getPayments();
+    if (this.selectedStatus === 'All') {
+      this.payments = allPayments;
+    } else {
+      this.payments = allPayments.filter(payment => payment.status === this.selectedStatus);
+    }
+    this.totalFiltered = this.calculateTotalFiltered();
   }
   
+  
   deletePayment(id: string): void {
-    this.paymentsService.deletePayment(id);
-    this.loadPayments();
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.paymentsService.deletePayment(id);
+        this.loadPayments();
+      }
+    });
+    
   }
 
   async editPayment(payment: Payment): Promise<void> {
@@ -90,23 +111,17 @@ export class PainelFinancasComponent implements OnInit {
 
   
   applyFilter(): void {
-    if (this.selectedStatus === 'All') {
-      this.loadPayments();
-      this.totalFiltered = this.calculateTotal();
-    } else {
-      const payments = this.paymentsService.getPayments();
-      this.payments = payments.filter(payment => payment.status.toLowerCase() === this.selectedStatus.toLowerCase());
-      this.totalFiltered = this.calculateTotalFiltered();
-    }
+    this.loadPayments();
   }
   
   calculateTotal(): number {
     const allPayments = this.paymentsService.getPayments();
-    return allPayments.reduce((total, payment) => total + parseFloat(payment.price), 0);
+    return allPayments.reduce((total, payment) => total + Math.abs(parseFloat(payment.price)), 0);
   }
   calculateTotalFiltered(): number {
-    return this.payments.reduce((total, payment) => total + parseFloat(payment.price), 0);
+    return this.payments.reduce((total, payment) =>total + Math.abs(parseFloat(payment.price)), 0);
   }
 
   
 }
+

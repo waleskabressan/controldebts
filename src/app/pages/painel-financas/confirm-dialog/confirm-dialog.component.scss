@@ -1,0 +1,29 @@
+@import "../../../../styles/variables.scss";
+.mat-dialog-title-custom {
+    color: $text-color;
+    font-size: 24px;
+  }
+  
+  .mat-dialog-content-custom {
+    color: $text-color;
+    font-size: 16px;
+  }
+  
+  .mat-dialog-actions-custom {
+    justify-content: flex-end;
+  }
+  
+  .mat-button-custom {
+    margin-left: 15px;
+    background-color: $primary-color;
+    color: rgb(249, 245, 245);
+    padding: 20px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .mat-button-custom:hover {
+    background-color: $secondary-color;
+  }

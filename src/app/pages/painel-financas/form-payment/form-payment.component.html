@@ -18,8 +18,8 @@
 
   <p>Valor:</p>
   <mat-form-field>
-    <mat-label>0,000.00</mat-label>
-    <input matInput  formControlName="price">
+    <mat-label>0.000,00</mat-label>
+    <input matInput  formControlName="price" mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ " placeholder="000.000,00">
   </mat-form-field>
 
   <p>Data:</p>

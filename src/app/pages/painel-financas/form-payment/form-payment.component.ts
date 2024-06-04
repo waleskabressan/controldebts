@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -110,6 +110,7 @@ export class FormPaymentComponent implements OnInit {
     this.editedPayment = null; // Cancela a edição ao limpar o pagamento em edição
   }
   
+  
 }
 
 export class DatepickerOverviewExample {}
@@ -125,5 +126,17 @@ export class DialogOverviewExampleDialog {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+}
+
+@Pipe({
+  name: 'num'
+})
+export class NumberPipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) return '';
+    value = value.replace(/\D/g, '');
+    value = (parseInt(value) / 100).toFixed(2);
+    return value.toString().replace('.', ',');
   }
 }
