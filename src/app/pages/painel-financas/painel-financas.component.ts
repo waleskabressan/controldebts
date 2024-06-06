@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { PainelFinancasService } from '../../services/painel-financas.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { DialogRef } from '@angular/cdk/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
@@ -62,8 +61,6 @@ export class PainelFinancasComponent implements OnInit {
     });
     modal.afterClosed().subscribe(result => {
       if(result == 'sucesso' ){
-        const newPaymentStatus = result.status;
-        this.selectedStatus = newPaymentStatus;
         this.loadPayments();
       }
     });
