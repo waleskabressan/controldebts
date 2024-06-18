@@ -11,11 +11,11 @@
 </div>
 
 <div class="total-container">
-  <h2>Total: {{ calculateTotal() | currency: 'USD' : 'symbol': '1.2-2' }}</h2>
+  <h2>Total: {{ calculateTotal() | currency: 'BRL'}}</h2>
 </div>
 
 <div class="total-container" *ngIf="selectedStatus !== 'All'">
-  <h2>Total ({{ statusTraduzido[selectedStatus] }}): {{ totalFiltered |currency: 'USD' : 'symbol': '1.2-2' }}</h2>
+  <h2>Total ({{ statusTraduzido[selectedStatus] }}): {{ totalFiltered |currency: 'BRL' }}</h2>
 </div>
 
 <div class="demo-button-container">
@@ -28,17 +28,20 @@
 
   <ng-container matColumnDef="description">
     <th mat-header-cell class="cell-header" *matHeaderCellDef>  Descrição</th>
-    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.description}} </td>
+    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> 
+      {{element.description}} </td>
   </ng-container>
 
   <ng-container matColumnDef="price">
     <th mat-header-cell class="cell-header" *matHeaderCellDef> Valor </th>
-    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.price | currency: 'BRL' : 'symbol': '1.2-2'}} </td>
+    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element">
+       {{element.price | currency: 'BRL'}} </td>
   </ng-container>
 
   <ng-container matColumnDef="date">
     <th mat-header-cell class="cell-header" *matHeaderCellDef> Data </th>
-    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> {{element.date}} </td>
+    <td mat-cell [ngClass]="{'paid-row': element.status === 'paid', 'to-pay-row': element.status === 'toPay'}" *matCellDef="let element"> 
+      {{element.date | mask: "d0/M0/0000" }} </td>
   </ng-container>
 
   <ng-container matColumnDef="action">

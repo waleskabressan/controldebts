@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -9,7 +9,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Payment} from '../../../type/payment.type';
 import { PainelFinancasService } from '../../../services/painel-financas.service';
-import { v4 as uuidv4 } from 'uuid';
 import { MatSelectModule } from '@angular/material/select';
 
 export interface DialogData {
@@ -109,6 +108,7 @@ export class FormPaymentComponent implements OnInit {
   cancelEdit(): void {
     this.editedPayment = null; // Cancela a edição ao limpar o pagamento em edição
   }
+  
   
 }
 
